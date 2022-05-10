@@ -1,0 +1,16 @@
+{
+  "name": "tutorials",
+  "version": "1.0.0",
+  "description": "\"Learning express and mysql\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "King David",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql": "^2.18.1"
+  }
+}
