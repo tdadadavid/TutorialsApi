@@ -14,6 +14,7 @@ router.get('/ping', (req, res) => {
 let tutorialController = new TutorialController();
 router.post('/api/tutorials', tutorialController.createTutorial);
 router.get('/api/tutorials', tutorialController.getAllTutorials);
+router.get('/api/tutorials/:id', tutorialController.getTutorialByID);
 
 
 module.exports = router;

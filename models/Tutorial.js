@@ -35,7 +35,6 @@ class Tutorial {
         });
     }
 
-
     // if there was error when executing query
     // pass it to the callback "result" to handle it.
     // else pass the data to be rendered.
@@ -56,18 +55,20 @@ class Tutorial {
     //get the particular course id
     // prepare the statement, run the statement
     // check if there was an error, or it was successful
-    getByTitle(title, callback){
-        this.statement = "SELECT * FROM tutorials WHERE title = ?";
+    getByID(id, callback){
+        this.statement = "SELECT * FROM tutorials WHERE id = ?";
 
-        conn.query(this.statement, title , (err, res) => {
+        conn.query(this.statement, id , (err, res) => {
             if (err){
                 callback(err, null);
                 return;
             }
 
-            callback(null, res);
+            callback(null, res.toJSON());
         });
     }
+
+
 }
 
 module.exports = Tutorial;

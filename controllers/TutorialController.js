@@ -1,3 +1,4 @@
+const { successResponse, errorResponse } = require('../utils/ApiResponse');
 const Tutorial  = require('../models/Tutorial');
 let tutorial = new Tutorial();
 
@@ -7,10 +8,7 @@ class TutorialController {
 
         // check if there is a payload
         if (!req.body) {
-            return res.status(400).json({
-                status: 400,
-                message: "No payload received"
-            });
+            errorResponse("No payload received");
         }
 
         // create a new course
@@ -20,14 +18,10 @@ class TutorialController {
         // save the course to the database
         tutorial.create(newTutorial, (err, data) => {
             if (err){
-                res.status(500).json({
-                    status: 500,
-                    message: err.message || "An Error occurred while creating tutorial"
-                });
-                return;
+                errorResponse(err.message || "An Error occurred while creating tutorial", 500);
             }
 
-            res.status(201).json({ data });
+            successResponse("Tutorial created successfully", data, 201);
         });
     }
 
@@ -35,57 +29,30 @@ class TutorialController {
         tutorial.getAll((err, data) => {
 
             if (err){
-                res.status(500).json({
-                    status: 500,
-                    message: "Oops! an unknown error occurred"
-                });
-                return;
+                errorResponse("Oops! an unknown error occurred", 500);
             }
-
-            res.status(200).json({
-                status: 200,
-                message: "All tutorials fetched",
-                data
-            });
+            successResponse("All tutorials fetched", data)
         })
     }
 
-    getTutorialByTitle = (req, res) =>{
-        const { title } = req.body;
-        if (!title){
-            res.status(400).json({
-                status: 400,
-                message: "Title field is required"
-            });
+    getTutorialByID = (req, res) =>{
+        const { id } = req.params;
+        if (!id){
+            errorResponse("ID field is required");
         }
 
-        tutorial.getByTitle(title, (err, data) => {
+        tutorial.getByID(id, (err, data) => {
             if (err){
                 console.log({ err });
-                res.status(500).json({
-                    status: 500,
-                    message: "Oops! an unknown error occurred."
-                });
-
-                return;
+                errorResponse("Oops! an unknown error occurred.", 500);
             }
 
-            if (!data){
-                res.status(404).json({
-                    status: 404,
-                    message: `Could not find course with ${title} as title.`,
-                    data
-                });
-                return;
+            if (data == ''){
+                errorResponse(`Could not find course with ${id} as id.`, 404);
             }
 
-            res.status(200).json({
-                status: 200,
-                message: "Tutorial fetched",
-                data
-            });
+            successResponse("Tutorial fetched", data);
         });
-
     }
     
 
