@@ -4,17 +4,15 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.get('/ping', (req, res) => {
-    res.json({
-        status: 200,
-        message: "pong"
-    })
-});
-
 let tutorialController = new TutorialController();
 router.post('/api/tutorials', tutorialController.createTutorial);
 router.get('/api/tutorials', tutorialController.getAllTutorials);
+router.get('/api/tutorials/published', tutorialController.getPublishedTutorials);
+router.get('/api/tutorials/unpublished', tutorialController.getUnpublishedTutorials);
 router.get('/api/tutorials/:id', tutorialController.getTutorialByID);
+router.put('/api/tutorials/:id', tutorialController.updateTutorialByID);
+router.delete('/api/tutorials/:id', tutorialController.deleteTutorialByID);
+router.delete('/api/tutorials/', tutorialController.deleteAllTutorials);
 
 
 module.exports = router;

@@ -59,15 +59,135 @@ class Tutorial {
         this.statement = "SELECT * FROM tutorials WHERE id = ?";
 
         conn.query(this.statement, id , (err, res) => {
+
+            // check if there was a problem executing the query.
             if (err){
                 callback(err, null);
                 return;
             }
 
-            callback(null, res.toJSON());
+            // check if the specified tutorial was found.
+            if (res.toString() === ""){
+                callback({ type: "notFound" }, null);
+                return;
+            }
+
+            // return the results of the query.
+            callback(null, res);
         });
     }
 
+    getPublishedTutorials(callback){
+        this.statement = "SELECT * FROM tutorials where published = 1";
+
+        conn.query(this.statement, (err, res) => {
+
+            if (err){
+                console.log({ err });
+                callback(err, null);
+                return;
+            }
+
+            if (res.toString() === ""){
+                callback({ type: "notFound" }, null);
+                return;
+            }
+
+            callback(null, res);
+        });
+    }
+
+    getUnpublishedTutorials(callback){
+        this.statement = "SELECT * FROM tutorials where published = 0";
+        
+        conn.query(this.statement, (err, res) => {
+
+            if (err){
+                console.log({ err });
+                callback(err, null);
+                return;
+            }
+
+            if (res.toString() === ""){
+                callback({ type: "notFound" }, null);
+                return;
+            }
+
+            callback(null, res);
+        });
+    }
+
+    updateByID(id, body, callback){
+        this.statement = "UPDATE tutorials SET title = ? , description = ?, published = ? WHERE id = ?";
+
+        // when using placeholders escape the user given values to
+        // prevent sqlInjection attacks.
+        let tutorialID = conn.escape(id);
+        let title = conn.escape(body.title);
+        let description = conn.escape(body.description);
+        let published = conn.escape(body.published);
+
+        conn.query(this.statement, [title, description, published, tutorialID], (err, res) => {
+
+            if (err){
+                console.log({ err });
+                callback(err, null);
+                return;
+            }
+
+            if (res.affectedRows === 0){
+                callback({ type: "notFound"}, null);
+                return;
+            }
+
+            callback(null, body);
+        });
+    }
+
+    deleteByID(id, callback){
+        this.statement = "DELETE FROM tutorials where id = ?";
+
+        let tutorialID = conn.escape(id);
+
+        conn.query(this.statement, tutorialID, (err, res) => {
+
+            if (err){
+                console.log({ err });
+                callback(err, null);
+                return;
+            }
+
+
+            if (res.affectedRows === 0){
+                callback({ type: "notFound" }, null);
+                return;
+            }
+
+            callback(null, res);
+        });
+
+
+    }
+
+    deleteAll(callback){
+        this.statement = "DELETE FROM tutorials";
+
+        conn.query(this.statement, (err, res) => {
+
+            if (err){
+                console.log({ err });
+                callback(err, null);
+                return;
+            }
+
+            if (res.affectedRows === 0){
+                callback({ type: "notFound" }, null);
+                return;
+            }
+
+            callback(null, res);
+        })
+    }
 
 }
 

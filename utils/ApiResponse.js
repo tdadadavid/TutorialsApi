@@ -1,23 +1,28 @@
-function successResponse(message, data, status = 200){
+function successResponse(message, data, res, status = 200){
     res.status(status).json({
         status,
         message,
         data,
     });
-    return;
 }
 
 
-function errorResponse(message, status = 400){
+function errorResponse(message, res, status = 400){
     res.status(status).json({
         status,
         message,
     });
+}
 
-    return;
+function successMessage(message, res, status = 200){
+    res.status(status).json({
+        status,
+        message
+    });
 }
 
 module.exports ={
     successResponse,
-    errorResponse
+    errorResponse,
+    successMessage
 }
