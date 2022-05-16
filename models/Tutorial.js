@@ -1,6 +1,7 @@
 const conn = require('./database');
 
 class Tutorial {
+
     constructor(title, description, published) {
         this.title = title;
         this.description = description;
@@ -99,7 +100,7 @@ class Tutorial {
 
     getUnpublishedTutorials(callback){
         this.statement = "SELECT * FROM tutorials where published = 0";
-        
+
         conn.query(this.statement, (err, res) => {
 
             if (err){
